@@ -55,6 +55,34 @@ regd_users.put("/auth/review/:isbn", (req, res) => {
   const isbn = req.params.isbn;
   let book = books[isbn]
   if (book) { //Check if book exists
+    const username = req.session.authorization.username; // Obtiene el nombre de usuario de la sesión
+    const reviewText = req.body.review; // Obtiene el texto de la reseña desde la consulta de la solicitud
+    if (!reviewText) {
+      return res.status(400).send('No review text provided.');
+    }
+
+    // Busca si el usuario ya ha dejado una reseña para este libro
+    const existingReviewIndex = book.reviews.findIndex(review => review.username === username);
+    if (existingReviewIndex !== -1) {
+      // Si el usuario ya ha dejado una reseña, modifica la reseña existente
+      book.reviews[existingReviewIndex].review = reviewText;
+      res.send(`Review modified for book with ISBN ${isbn}.`);
+    } else {
+      // Si el usuario no ha dejado una reseña previa, agrega una nueva reseña
+      book.reviews.push({username: username, review: reviewText});
+      res.send(`Review added to book with ISBN ${isbn}.`);
+    }
+  } else {
+      res.send("Unable to find book!");
+  }
+});
+
+//delete a review
+regd_users.delete("/auth/review/:isbn", (req, res) => {
+  //Write your code here
+  const isbn = req.params.isbn;
+  let book = books[isbn]
+  if (book) { //Check if book exists
       let review = req.body.review;
       //Add similarly for firstName
       //Add similarly for lastName
@@ -64,7 +92,7 @@ regd_users.put("/auth/review/:isbn", (req, res) => {
           books[isbn]=book;//anade book con updated review
 
 
-          res.send(`Book with the isbn  ${isbn} updated.`);
+          res.send(`Review on Book with the isbn  ${isbn} deleted.`);
       } else {
         res.send('No review added.');
       }
