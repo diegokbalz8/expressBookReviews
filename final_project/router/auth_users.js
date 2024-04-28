@@ -79,30 +79,25 @@ regd_users.put("/auth/review/:isbn", (req, res) => {
 
 //delete a review
 regd_users.delete("/auth/review/:isbn", (req, res) => {
-  //Write your code here
-  const isbn = req.params.isbn;
-  let book = books[isbn]
-  if (book) { //Check if book exists
-      let review = req.body.review;
-      //Add similarly for firstName
-      //Add similarly for lastName
-      //if DOB the DOB has been changed, update the DOB 
-      if(review) {
-          book["reviews"] = review
-          books[isbn]=book;//anade book con updated review
-
-
-          res.send(`Review on Book with the isbn  ${isbn} deleted.`);
-      } else {
-        res.send('No review added.');
+    const isbn = req.params.isbn;
+    let book = books[isbn];
+    if (book) { // Verificar si el libro existe
+      if (!book.reviews) {
+        return res.status(404).send("No reviews found for this book.");
       }
-      //Add similarly for firstName
-      //Add similarly for lastName
-
-  }
-  else{
-      res.send("Unable to find book!");
-  }
+      const username = req.session.authorization.username; // Asumiendo que el username está almacenado así en la sesión
+      const originalReviewCount = book.reviews.length;
+      book.reviews = book.reviews.filter(review => review.username !== username); // Filtrar y dejar solo las reseñas no del usuario
+  
+      if (originalReviewCount === book.reviews.length) {
+        return res.send('No review by the user found or deleted.');
+      }
+  
+      books[isbn] = book; // actualizar el libro con la lista de reseñas filtrada
+      res.send(`Review by ${username} on book with ISBN ${isbn} has been deleted.`);
+    } else {
+      res.status(404).send("Book not found.");
+    }
 });
 
 module.exports.authenticated = regd_users;
