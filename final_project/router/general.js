@@ -2,7 +2,8 @@ const express = require('express');
 let books = require("./booksdb.js");
 let isValid = require("./auth_users.js").isValid;
 let users = require("./auth_users.js").users;
-const public_users = express.Router();
+const public_users = express.Router(); 
+const axios = require('axios').default;
 
 
 
@@ -22,9 +23,22 @@ public_users.post("/register", (req,res) => {
 
 // Get the book list available in the shop
 public_users.get('/',function (req, res) {
-  //Write your code here
-  res.send(JSON.stringify(books,null,4));
-  //return res.status(300).json({message: "Yet to be implemented"});
+    //Write your code here
+    res.send(JSON.stringify(books,null,4));
+    //return res.status(300).json({message: "Yet to be implemented"});
+  });
+
+public_users.get('/books', function (req, res) {
+    axios.get('https://diegocabalce-5000.theianext-0-labs-prod-misc-tools-us-east-0.proxy.cognitiveclass.ai')
+        .then(response => {
+            res.send(JSON.stringify(response.data.books, null, 4));
+            console.log("Promise for Task 10 resolved");
+        })
+        .catch(error => {
+            // Handle error
+            console.error('Error fetching books:', error);
+            res.status(500).send('Error fetching books');
+        });
 });
 
 // Get book details based on ISBN
