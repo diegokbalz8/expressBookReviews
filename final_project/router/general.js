@@ -49,6 +49,19 @@ public_users.get('/isbn/:isbn',function (req, res) {
   res.send(JSON.stringify(books[isbn],null,4));
  });
   
+ public_users.get('/books/isbn/:isbn', function (req, res) {
+    const isbn = req.params.isbn;
+    axios.get(`https://diegocabalce-5000.theianext-0-labs-prod-misc-tools-us-east-0.proxy.cognitiveclass.ai/books?isbn=${isbn}`)
+      .then(response => {
+        res.send(JSON.stringify(response.data, null, 4));
+        console.log("Promise for Task 11 resolved");
+      })
+      .catch(error => {
+        console.error('Error fetching book details:', error);
+        res.status(500).send('Error fetching book details');
+      });
+  });
+
 // Get book details based on author
 public_users.get('/author/:author',function (req, res) {
   //Write your code here  
@@ -60,6 +73,22 @@ public_users.get('/author/:author',function (req, res) {
 
 });
 
+
+public_users.get('/books/author/:author', function (req, res) {
+    const author = req.params.author;
+    axios.get(`https://diegocabalce-5000.theianext-0-labs-prod-misc-tools-us-east-0.proxy.cognitiveclass.ai/books?author=${author}`)
+      .then(response => {
+        res.send(JSON.stringify(response.data, null, 4));
+        console.log("Promise for getting book details by author resolved");
+      })
+      .catch(error => {
+        console.error('Error fetching book details by author:', error);
+        res.status(500).send('Error fetching book details by author');
+      });
+  });
+
+
+
 // Get all books based on title
 public_users.get('/title/:title',function (req, res) {
   //Write your code here
@@ -69,7 +98,19 @@ public_users.get('/title/:title',function (req, res) {
   let filtered_books = booksArray.filter(book => book.title === title);
   res.send(filtered_books);
   
+});
 
+public_users.get('/books/title/:title', function (req, res) {
+    const title = req.params.title;
+    axios.get(`https://diegocabalce-5000.theianext-0-labs-prod-misc-tools-us-east-0.proxy.cognitiveclass.ai/books?title=${title}`)
+      .then(response => {
+        res.send(JSON.stringify(response.data, null, 4));
+        console.log("Promise for getting book details by title resolved");
+      })
+      .catch(error => {
+        console.error('Error fetching book details by author:', error);
+        res.status(500).send('Error fetching book details by title');
+      });
 });
 
 //  Get book review
