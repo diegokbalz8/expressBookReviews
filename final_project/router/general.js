@@ -28,6 +28,7 @@ public_users.get('/',function (req, res) {
     //return res.status(300).json({message: "Yet to be implemented"});
   });
 
+// Get booklist using Promise callbacks or async-await with Axios
 public_users.get('/books', function (req, res) {
     axios.get('https://diegocabalce-5000.theianext-0-labs-prod-misc-tools-us-east-0.proxy.cognitiveclass.ai')
         .then(response => {
@@ -49,6 +50,7 @@ public_users.get('/isbn/:isbn',function (req, res) {
   res.send(JSON.stringify(books[isbn],null,4));
  });
   
+ // Get book details based on ISBN using Promise callbacks or async-await with Axios
  public_users.get('/books/isbn/:isbn', function (req, res) {
     const isbn = req.params.isbn;
     axios.get(`https://diegocabalce-5000.theianext-0-labs-prod-misc-tools-us-east-0.proxy.cognitiveclass.ai/books?isbn=${isbn}`)
@@ -73,7 +75,7 @@ public_users.get('/author/:author',function (req, res) {
 
 });
 
-
+ // Get book details based on author using Promise callbacks or async-await with Axios
 public_users.get('/books/author/:author', function (req, res) {
     const author = req.params.author;
     axios.get(`https://diegocabalce-5000.theianext-0-labs-prod-misc-tools-us-east-0.proxy.cognitiveclass.ai/books?author=${author}`)
@@ -100,6 +102,7 @@ public_users.get('/title/:title',function (req, res) {
   
 });
 
+ // Get book details based on title using Promise callbacks or async-await with Axios
 public_users.get('/books/title/:title', function (req, res) {
     const title = req.params.title;
     axios.get(`https://diegocabalce-5000.theianext-0-labs-prod-misc-tools-us-east-0.proxy.cognitiveclass.ai/books?title=${title}`)
